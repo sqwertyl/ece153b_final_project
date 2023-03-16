@@ -3,18 +3,19 @@
 
 #include "stm32l476xx.h"
 
-enum MTR{
-	R,
-	L,
+enum DIR{
+	FORWARD, BACKWARD,
+	RIGHT, LEFT,
 };
+
+
 
 void STEPPER_MOTOR_Init(void);
 
 void GPIO_Init_R(void);
 void GPIO_Init_L(void);
 
-void fClockwise(enum MTR motor);
-void fCounterClockwise(enum MTR motor);
+void move_robot(enum DIR dir);
 
 
 #endif

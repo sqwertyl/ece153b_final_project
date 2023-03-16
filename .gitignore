@@ -1,5 +1,6 @@
 Objects/
 RTE/
 DebugConfig/
+.vscode/
 EventRecorderStub.scvd
 final_proj.uvguix.*

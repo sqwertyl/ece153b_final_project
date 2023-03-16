@@ -57,5 +57,5 @@ void EXTI15_10_IRQHandler(void) {
 
 void TIM2_IRQHandler(void) {
 	TIM2->SR &= ~TIM_SR_UIF;
-	fClockwise(L);
+	move_robot(FORWARD);
 }

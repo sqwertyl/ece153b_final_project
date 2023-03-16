@@ -13,6 +13,7 @@
 
 void EXTI_Init(void);
 
-//void EXTI15_10_IRQHandler(void);
+void EXTI15_10_IRQHandler(void);
+void TIM2_IRQHandler(void);
 
 #endif
