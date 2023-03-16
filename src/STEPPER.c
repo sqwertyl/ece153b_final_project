@@ -1,7 +1,7 @@
 #include "STEPPER.h"
 
 void STEPPER_MOTOR_Init(void) {
-	//GPIO_Init_R();
+	GPIO_Init_R();
 	GPIO_Init_L();
 }
 
@@ -19,154 +19,66 @@ void GPIO_Init_R(void) {
 	GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPD5 | GPIO_PUPDR_PUPD6 | GPIO_PUPDR_PUPD8 | GPIO_PUPDR_PUPD9);
 }
 
-
 void GPIO_Init_L(void) {
-	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 	// set pins to output
-	GPIOB->MODER &= ~(GPIO_MODER_MODE1 | GPIO_MODER_MODE2 | GPIO_MODER_MODE11 | GPIO_MODER_MODE12);
-	GPIOB->MODER |= (GPIO_MODER_MODE1_0 | GPIO_MODER_MODE2_0 | GPIO_MODER_MODE11_0 | GPIO_MODER_MODE12_0);
+	GPIOC->MODER &= ~(GPIO_MODER_MODE0 | GPIO_MODER_MODE1 | GPIO_MODER_MODE2 | GPIO_MODER_MODE3);
+	GPIOC->MODER |= (GPIO_MODER_MODE0_0 | GPIO_MODER_MODE1_0 | GPIO_MODER_MODE2_0 | GPIO_MODER_MODE3_0);
 	// set output type to push pull
-	GPIOB->OTYPER &= ~(GPIO_OTYPER_OT1 | GPIO_OTYPER_OT2 | GPIO_OTYPER_OT11 | GPIO_OTYPER_OT12);
+	GPIOC->OTYPER &= ~(GPIO_OTYPER_OT0 | GPIO_OTYPER_OT1 | GPIO_OTYPER_OT2 | GPIO_OTYPER_OT3);
 	// set pins to no pull up or pull down
-	GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPD1 | GPIO_PUPDR_PUPD2 | GPIO_PUPDR_PUPD11 | GPIO_PUPDR_PUPD12);
+	GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPD0 | GPIO_PUPDR_PUPD1 | GPIO_PUPDR_PUPD2 | GPIO_PUPDR_PUPD3);
 	// set pins to high speed
-	GPIOB->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEED1 | GPIO_OSPEEDR_OSPEED2 | GPIO_OSPEEDR_OSPEED11 | GPIO_OSPEEDR_OSPEED12);
-	GPIOB->OSPEEDR |= (GPIO_OSPEEDR_OSPEED1_1 | GPIO_OSPEEDR_OSPEED2_1 | GPIO_OSPEEDR_OSPEED11_1 | GPIO_OSPEEDR_OSPEED12_1);
+	GPIOC->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEED0 | GPIO_OSPEEDR_OSPEED1 | GPIO_OSPEEDR_OSPEED2 | GPIO_OSPEEDR_OSPEED3);
+	GPIOC->OSPEEDR |= (GPIO_OSPEEDR_OSPEED0_1 | GPIO_OSPEEDR_OSPEED1_1 | GPIO_OSPEEDR_OSPEED2_1 | GPIO_OSPEEDR_OSPEED3_1);
 }
 
 #define DELAY 500
 
+static uint32_t pinA1_R = GPIO_ODR_OD5, pinA2_R = GPIO_ODR_OD6,
+				pinA1_L = GPIO_ODR_OD0, pinA2_L = GPIO_ODR_OD1;
 
-void fClockwise(enum MTR motor) {
-	if (motor == R) {
-		// step 1
-		GPIOC->ODR |= GPIO_ODR_OD5;		// A	-> 1
-		GPIOC->ODR &= ~GPIO_ODR_OD6;	// A'	-> 0
-		GPIOC->ODR &= ~GPIO_ODR_OD8;	// B	-> 0
-		GPIOC->ODR |= GPIO_ODR_OD9;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 2
-		GPIOC->ODR ^= GPIO_ODR_OD8;		// B	-> 1
-		GPIOC->ODR ^= GPIO_ODR_OD9;		// B'	-> 0
-		for (int i = 0; i < DELAY; i++);
-		// step 3
-		GPIOC->ODR ^= GPIO_ODR_OD5;		// A	-> 0
-		GPIOC->ODR ^= GPIO_ODR_OD6;		// A'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 4
-		GPIOC->ODR ^= GPIO_ODR_OD8;		// B	-> 0
-		GPIOC->ODR ^= GPIO_ODR_OD9;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
-	} else if (motor == L) {
-		// step 1
-		GPIOB->ODR |= GPIO_ODR_OD1;		// A	-> 1
-		GPIOB->ODR &= ~GPIO_ODR_OD2;	// A'	-> 0
-		GPIOB->ODR &= ~GPIO_ODR_OD11;	// B	-> 0
-		GPIOB->ODR |= GPIO_ODR_OD12;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 2
-		GPIOB->ODR ^= GPIO_ODR_OD11;		// B	-> 1
-		GPIOB->ODR ^= GPIO_ODR_OD12;		// B'	-> 0
-		for (int i = 0; i < DELAY; i++);
-		// step 3
-		GPIOB->ODR ^= GPIO_ODR_OD1;		// A	-> 0
-		GPIOB->ODR ^= GPIO_ODR_OD2;		// A'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 4
-		GPIOB->ODR ^= GPIO_ODR_OD11;		// B	-> 0
-		GPIOB->ODR ^= GPIO_ODR_OD12;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
+static uint32_t pinB1_R = GPIO_ODR_OD8, pinB2_R = GPIO_ODR_OD9,
+				pinB1_L = GPIO_ODR_OD2, pinB2_L = GPIO_ODR_OD3;
+
+void move_robot(enum DIR dir) {
+	switch (dir) {
+		case FORWARD:
+			// step 1
+			GPIOC->ODR |= pinA1_R | pinA2_L;
+			GPIOC->ODR &= ~(pinA2_R | pinA1_L);
+			break;
+		case BACKWARD:
+			// step 1
+			GPIOC->ODR |= pinA2_R | pinA1_L;
+			GPIOC->ODR &= ~(pinA1_R | pinA2_L);
+			break;
+		case LEFT:
+			// step 1
+			GPIOC->ODR |= pinA1_R | pinA1_L;
+			GPIOC->ODR &= ~(pinA2_R | pinA2_L);
+			break;
+		case RIGHT:
+			// step 1
+			GPIOC->ODR |= pinA2_R | pinA2_L;
+			GPIOC->ODR &= ~(pinA1_R | pinA2_L);
+			break;
 	}
-}
-
-
-
-void fCounterClockwise(enum MTR motor) {
-	if (motor == R) {
-		// step 1
-		GPIOC->ODR &= ~GPIO_ODR_OD5;	// A	-> 1
-		GPIOC->ODR |= GPIO_ODR_OD6;		// A'	-> 0
-		GPIOC->ODR &= ~GPIO_ODR_OD8;	// B	-> 0
-		GPIOC->ODR |= GPIO_ODR_OD9;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 2
-		GPIOC->ODR ^= GPIO_ODR_OD8;		// B	-> 1
-		GPIOC->ODR ^= GPIO_ODR_OD9;		// B'	-> 0
-		for (int i = 0; i < DELAY; i++);
-		// step 3
-		GPIOC->ODR ^= GPIO_ODR_OD5;		// A	-> 0
-		GPIOC->ODR ^= GPIO_ODR_OD6;		// A'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 4
-		GPIOC->ODR ^= GPIO_ODR_OD8;		// B	-> 0
-		GPIOC->ODR ^= GPIO_ODR_OD9;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
-	} else if (motor == L) {
-		// step 1
-		GPIOB->ODR &= ~GPIO_ODR_OD1;	// A	-> 1
-		GPIOB->ODR |= GPIO_ODR_OD2;		// A'	-> 0
-		GPIOB->ODR &= ~GPIO_ODR_OD11;	// B	-> 0
-		GPIOB->ODR |= GPIO_ODR_OD12;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 2
-		GPIOB->ODR ^= GPIO_ODR_OD1;		// B	-> 1
-		GPIOB->ODR ^= GPIO_ODR_OD2;		// B'	-> 0
-		for (int i = 0; i < DELAY; i++);
-		// step 3
-		GPIOB->ODR ^= GPIO_ODR_OD1;		// A	-> 0
-		GPIOB->ODR ^= GPIO_ODR_OD2;		// A'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		// step 4
-		GPIOB->ODR ^= GPIO_ODR_OD11;		// B	-> 0
-		GPIOB->ODR ^= GPIO_ODR_OD12;		// B'	-> 1
-		for (int i = 0; i < DELAY; i++);
-		
-	}
+	
+	GPIOC->ODR &= ~(pinB1_R | pinB1_L);
+	GPIOC->ODR |= pinB2_R | pinB2_L;
+	for (int i = 0; i < DELAY; i++);
+	// step 2
+	GPIOC->ODR ^= pinB1_R | pinB1_L;
+	GPIOC->ODR ^= pinB2_R | pinB2_L;
+	for (int i = 0; i < DELAY; i++);
+	// step 3
+	GPIOC->ODR ^= pinA1_R | pinA1_L;
+	GPIOC->ODR ^= pinA2_R | pinA2_L;
+	for (int i = 0; i < DELAY; i++);
+	// step 4
+	GPIOC->ODR ^= pinB1_R | pinB1_L;
+	GPIOC->ODR ^= pinB2_R | pinB2_L;
+	for (int i = 0; i < DELAY; i++);
 
 }
-// void fClockwise(enum MTR motor) {
-//     GPIO_TypeDef* portA;
-//     GPIO_TypeDef* portB;
-//     uint32_t pinA1;
-//     uint32_t pinA2;
-//     uint32_t pinB1;
-//     uint32_t pinB2;
-//     if (motor == R) {
-//         portA = GPIOC;
-//         portB = GPIOC;
-//         pinA1 = GPIO_ODR_OD5;
-//         pinA2 = GPIO_ODR_OD6;
-//         pinB1 = GPIO_ODR_OD8;
-//         pinB2 = GPIO_ODR_OD9;
-//     } else {
-//         portA = GPIOB;
-//         portB = GPIOB;
-//         pinA1 = GPIO_ODR_OD1;
-//         pinA2 = GPIO_ODR_OD2;
-//         pinB1 = GPIO_ODR_OD11;
-//         pinB2 = GPIO_ODR_OD12;
-//     }
-// 		for (int j = 0; j < 512; j++) {
-//     // step 1
-//     portA->ODR |= pinA1;
-//     portA->ODR &= ~pinA2;
-//     portB->ODR &= ~pinB1;
-//     portB->ODR |= pinB2;
-//     for (int i = 0; i < DELAY; i++);
-//     // step 2
-//     portB->ODR ^= pinB1;
-//     portB->ODR ^= pinB2;
-//     for (int i = 0; i < DELAY; i++);
-//     // step 3
-//     portA->ODR ^= pinA1;
-//     portA->ODR ^= pinA2;
-//     for (int i = 0; i < DELAY; i++);
-//     // step 4
-//     portB->ODR ^= pinB1;
-//     portB->ODR ^= pinB2;
-//     for (int i = 0; i < DELAY; i++);
-// 		}
-
-// }
-
-
