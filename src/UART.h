@@ -11,6 +11,7 @@ void UART1_GPIO_Init(void);
 void UART2_GPIO_Init(void);
 
 void USART_Init(USART_TypeDef* USARTx);
+void Init_USARTx(int x);
 
 void USART1_IRQHandler(void);
 void USART2_IRQHandler(void);

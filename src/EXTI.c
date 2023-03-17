@@ -1,14 +1,7 @@
-/*
- * ECE 153B - Winter 2021
- *
- * Name(s):
- * Section:
- * Lab: 2A
- */
-
 #include "EXTI.h"
 #include "LED.h"
 #include "STEPPER.h"
+
 
 void EXTI_Init(void) {
 	// Initialize User Button
@@ -57,5 +50,4 @@ void EXTI15_10_IRQHandler(void) {
 
 void TIM2_IRQHandler(void) {
 	TIM2->SR &= ~TIM_SR_UIF;
-	move_robot(FORWARD);
 }

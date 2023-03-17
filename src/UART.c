@@ -1,5 +1,19 @@
 #include "UART.h"
 
+void Init_USARTx(int x) {
+	if(x == 1) {
+		UART1_Init();
+		UART1_GPIO_Init();
+		USART_Init(USART1);
+	} else if(x == 2) {
+		UART2_Init();
+		UART2_GPIO_Init();
+		USART_Init(USART2);
+	} else {
+		// Do nothing...
+	}
+}
+
 void UART1_Init(void) {
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 	RCC->CCIPR |= RCC_CCIPR_USART1SEL_0;
@@ -44,7 +58,7 @@ void USART_Init(USART_TypeDef* USARTx) {
 	USARTx->CR1 &= ~USART_CR1_M;	// set word length to 8 bits
 	USARTx->CR1 &= ~USART_CR1_OVER8;	// set oversampling to 16
 	USARTx->CR2 &= ~USART_CR2_STOP;	// setting 1 stop bit
-	USARTx->BRR |= 80000000/9600;	// setting baud rate to 9600
+	USARTx->BRR |= 4000000/9600;	// setting baud rate to 9600
 	USARTx->CR1 |= USART_CR1_TE;	// enable transmitter
 	USARTx->CR1 |= USART_CR1_RE;	// enable receiver
 	

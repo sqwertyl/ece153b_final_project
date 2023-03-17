@@ -55,17 +55,18 @@ void I2C_Initialization(void){
 	I2C1->CR2 |= I2C_CR2_AUTOEND;	// automatic end mode
 	I2C1->CR2 |= I2C_CR2_NACK;		// nack generation
 	
-	I2C1->TIMINGR |= (0x01 << I2C_TIMINGR_PRESC_POS);	// prescaler value
-	I2C1->TIMINGR |= (0x02 << I2C_TIMINGR_SDADEL_POS);	// data hold time = 30us
-	I2C1->TIMINGR |= (0x04 << I2C_TIMINGR_SCLDEL_POS);	// clock setup time = 2000ns
-	I2C1->TIMINGR |= (0x13 << I2C_TIMINGR_SCLL_POS);	// low clock period = 30us
-	I2C1->TIMINGR |= (0x0F << I2C_TIMINGR_SCLH_POS);	// high clock period = 30us	
-	
+	I2C1->TIMINGR |= (9U << I2C_TIMINGR_PRESC_POS);	// prescaler value
+	I2C1->TIMINGR |= (3U << I2C_TIMINGR_SDADEL_POS);	// data hold time = 1250ns
+	I2C1->TIMINGR |= (3U << I2C_TIMINGR_SCLDEL_POS);	// clock setup time = 1000ns
+	I2C1->TIMINGR |= (49U << I2C_TIMINGR_SCLL_POS);		// low clock period = 4.7us
+	I2C1->TIMINGR |= (39U << I2C_TIMINGR_SCLH_POS);		// high clock period = 4us
+
 	I2C1->OAR1 &= ~I2C_OAR1_OA1EN;		// disable for modification
 	I2C1->OAR2 &= ~I2C_OAR2_OA2EN;		// disable OAR2
 	I2C1->OAR1 &= ~I2C_OAR1_OA1MODE;	// ensure 7-bit addressing mode
 	I2C1->OAR1 |= OwnAddr << 1;				// set own address
 	I2C1->OAR1 |= I2C_OAR1_OA1EN;			// enable OAR1
+	
 	
 	I2C1->CR1 |= I2C_CR1_PE;	// enable i2c
 }
