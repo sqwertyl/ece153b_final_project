@@ -33,7 +33,7 @@ void GPIO_Init_L(void) {
 	GPIOC->OSPEEDR |= (GPIO_OSPEEDR_OSPEED0_1 | GPIO_OSPEEDR_OSPEED1_1 | GPIO_OSPEEDR_OSPEED2_1 | GPIO_OSPEEDR_OSPEED3_1);
 }
 
-#define DELAY 500
+#define DELAY 1200
 
 static uint32_t pinA1_R = GPIO_ODR_OD5, pinA2_R = GPIO_ODR_OD6,
 				pinA1_L = GPIO_ODR_OD0, pinA2_L = GPIO_ODR_OD1;
@@ -61,7 +61,7 @@ void move_robot(enum DIR dir) {
 		case RIGHT:
 			// step 1
 			GPIOC->ODR |= pinA2_R | pinA2_L;
-			GPIOC->ODR &= ~(pinA1_R | pinA2_L);
+			GPIOC->ODR &= ~(pinA1_R | pinA1_L);
 			break;
 	}
 	
