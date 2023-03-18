@@ -10,9 +10,9 @@
 #include <stdio.h>
 
 int main(void) {
-	STEPPER_MOTOR_Init();
-	LED_Init();
-	EXTI_Init();
+	//STEPPER_MOTOR_Init();
+	//LED_Init();
+	//EXTI_Init();
 	I2C_GPIO_Init();
 	I2C_Initialization();
 	
@@ -33,8 +33,9 @@ int main(void) {
 	while (1) {
 		uint8_t data[6] = {0};
 		I2C_ReceiveData(I2C1, n_addr_receive, &data, 6);
-		I2C_SendData(I2C1, n_addr_send, &n_done, 2);
-		//uint8_t n_data[6] = data;
+		I2C_SendData(I2C1, n_addr_receive, &n_done, 2);
+		
+		
 		printf("joyX: %i\t\t", data[0]);
 		printf("joyY: %i\t\t", data[1]);
 		printf("Z: %i\t", (data[5] >> 0) & 1);

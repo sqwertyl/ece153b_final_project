@@ -17,10 +17,12 @@ extern void Error_Handler(void);
 //===============================================================================
 void I2C_GPIO_Init(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
-	GPIOB->MODER &= ~(GPIO_MODER_MODE6 + GPIO_MODER_MODE7);		// set pins to alternate mode
-	GPIOB->MODER |= GPIO_MODER_MODE6_1 + GPIO_MODER_MODE7_1;	// ^
-	GPIOB->AFR[0] &= ~(GPIO_AFRL_AFSEL6 + GPIO_AFRL_AFSEL7);		// set alternate function
-	GPIOB->AFR[0] |= (GPIO_AFRL_AFSEL6_2 + GPIO_AFRL_AFSEL7_2);	// ^
+	GPIOB->AFR[0] &= ~(GPIO_AFRL_AFSEL6 + GPIO_AFRL_AFSEL7);      // set alternate function
+	GPIOB->AFR[0] |= (GPIO_AFRL_AFSEL6_2 + GPIO_AFRL_AFSEL7_2);   // ^
+	
+	GPIOB->MODER &= ~(GPIO_MODER_MODE6 + GPIO_MODER_MODE7);       // set pins to alternate mode
+	GPIOB->MODER |= GPIO_MODER_MODE6_1 + GPIO_MODER_MODE7_1;     // ^
+
 	
 	GPIOB->OTYPER |= GPIO_OTYPER_OT6 + GPIO_OTYPER_OT7;	// set to open drain
 	GPIOB->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR6 + GPIO_OSPEEDER_OSPEEDR7;	// set to very high speed
@@ -52,7 +54,8 @@ void I2C_Initialization(void){
 	I2C1->CR1 |= I2C_CR1_ERRIE;		// enable error interrupts
 	I2C1->CR1 &= ~I2C_CR1_NOSTRETCH;	// (keeping) clock stretching
 	I2C1->CR2 &= ~I2C_CR2_ADD10;			// 7-bit addressing mode
-	I2C1->CR2 |= I2C_CR2_AUTOEND;	// automatic end mode
+	I2C1->CR2 &= ~I2C_CR2_AUTOEND;  // Disable automatic end mode
+	I2C1->CR2 |= I2C_CR2_RELOAD;    // Enable reload mode
 	I2C1->CR2 |= I2C_CR2_NACK;		// nack generation
 	
 	I2C1->TIMINGR |= (9U << I2C_TIMINGR_PRESC_POS);	// prescaler value
@@ -130,7 +133,7 @@ void I2C_WaitLineIdle(I2C_TypeDef * I2Cx){
 int8_t I2C_SendData(I2C_TypeDef * I2Cx, uint8_t DeviceAddress, uint8_t *pData, uint8_t Size) {
 	int i;
 	
-	if (Size <= 0 || pData == NULL) return -1;
+	//if (Size <= 0 || pData == NULL) return -1;
 	
 	I2C_WaitLineIdle(I2Cx);
 	
@@ -170,7 +173,7 @@ int8_t I2C_SendData(I2C_TypeDef * I2Cx, uint8_t DeviceAddress, uint8_t *pData, u
 int8_t I2C_ReceiveData(I2C_TypeDef * I2Cx, uint8_t DeviceAddress, uint8_t *pData, uint8_t Size) {
 	int i;
 	
-	if(Size <= 0 || pData == NULL) return -1;
+	//if(Size <= 0 || pData == NULL) return -1;
 
 	I2C_WaitLineIdle(I2Cx);
 
