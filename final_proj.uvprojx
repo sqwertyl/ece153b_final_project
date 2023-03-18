@@ -470,29 +470,19 @@
               <FilePath>.\src\SysClock.h</FilePath>
             </File>
             <File>
+              <FileName>DISTANCE.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\DISTANCE.h</FilePath>
+            </File>
+            <File>
+              <FileName>DISTANCE.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\DISTANCE.c</FilePath>
+            </File>
+            <File>
               <FileName>UART_printf.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\UART_printf.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ADC.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADC.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\ADC.h</FilePath>
-            </File>
-            <File>
-              <FileName>PWM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\PWM.c</FilePath>
-            </File>
-            <File>
-              <FileName>PWM.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\PWM.h</FilePath>
             </File>
           </Files>
         </Group>
