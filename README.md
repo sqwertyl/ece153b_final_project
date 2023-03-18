@@ -2,7 +2,7 @@
 
 [Project Site](https://sites.google.com/view/ece153b-project-proposal/home)
 
-This repository contains the final project for ECE153B. The project was implemented using Keil uVision.
+This repository contains the final project for ECE153B. The project was implemented using the STM32L476RG Nucleo Board from STMicroelectronics.
 
 ## Description
 
