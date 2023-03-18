@@ -2,7 +2,7 @@
 
 [Project Site](https://sites.google.com/view/ece153b-project-proposal/home)
 
-This repository contains the final project for ECE153B. The project was implemented using the STM32L476RG Nucleo Board from STMicroelectronics.
+This repository contains the final project for ECE153B. The project was implemented using the [STM32L476RG Nucleo Board](https://www.st.com/en/evaluation-tools/nucleo-l476rg.html) from STMicroelectronics.
 
 ## Description
 
