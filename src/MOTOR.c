@@ -148,3 +148,14 @@ void move_robot(enum DIR dir) {
 		for (int i = 0; i < DELAY; i++);
 	}
 }
+
+void motor_initializer(void) {
+		for(int i=0; i < 10000; i++);
+		move_robot(FORWARD);
+		for(int i=0; i < 10000; i++);
+		move_robot(BACKWARD);
+		for(int i=0; i < 10000; i++);
+		move_robot(RIGHT);
+		for(int i=0; i < 10000; i++);
+		move_robot(LEFT);
+}
