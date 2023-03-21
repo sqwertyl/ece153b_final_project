@@ -44,7 +44,7 @@ void I2C_Initialization(void){
 	
 	RCC->APB1ENR1 |= RCC_APB1ENR1_I2C1EN;
 	RCC->CCIPR &= ~RCC_CCIPR_I2C1SEL;
-	RCC->CCIPR |= RCC_CCIPR_I2C1SEL_0;
+	RCC->CCIPR |= RCC_CCIPR_I2C1SEL_1;
 	RCC->APB1RSTR1 |= RCC_APB1RSTR1_I2C1RST;
 	RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_I2C1RST;
 	
@@ -58,7 +58,7 @@ void I2C_Initialization(void){
 	I2C1->CR2 |= I2C_CR2_RELOAD;    // Enable reload mode
 	I2C1->CR2 |= I2C_CR2_NACK;		// nack generation
 	
-	I2C1->TIMINGR |= (9U << I2C_TIMINGR_PRESC_POS);	// prescaler value
+	I2C1->TIMINGR |= (39U << I2C_TIMINGR_PRESC_POS);	// prescaler value
 	I2C1->TIMINGR |= (3U << I2C_TIMINGR_SDADEL_POS);	// data hold time = 1250ns
 	I2C1->TIMINGR |= (3U << I2C_TIMINGR_SCLDEL_POS);	// clock setup time = 1000ns
 	I2C1->TIMINGR |= (49U << I2C_TIMINGR_SCLL_POS);		// low clock period = 4.7us
