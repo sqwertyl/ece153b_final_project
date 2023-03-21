@@ -153,17 +153,12 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>cm</ItemText>
+          <ItemText>distance_S1</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>timeInterval</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>overflowCount</ItemText>
+          <ItemText>distance_S2</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
