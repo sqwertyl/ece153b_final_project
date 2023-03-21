@@ -23,15 +23,15 @@ void GPIO_Init_R(void) {
 void GPIO_Init_L(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 	// set pins to output
-	GPIOC->MODER &= ~(GPIO_MODER_MODE0 | GPIO_MODER_MODE1 | GPIO_MODER_MODE2 | GPIO_MODER_MODE3);
-	GPIOC->MODER |= (GPIO_MODER_MODE0_0 | GPIO_MODER_MODE1_0 | GPIO_MODER_MODE2_0 | GPIO_MODER_MODE3_0);
+	GPIOC->MODER &= ~(GPIO_MODER_MODE0 | GPIO_MODER_MODE1 | GPIO_MODER_MODE10 | GPIO_MODER_MODE12);
+	GPIOC->MODER |= (GPIO_MODER_MODE0_0 | GPIO_MODER_MODE1_0 | GPIO_MODER_MODE10_0 | GPIO_MODER_MODE12_0);
 	// set output type to push pull
-	GPIOC->OTYPER &= ~(GPIO_OTYPER_OT0 | GPIO_OTYPER_OT1 | GPIO_OTYPER_OT2 | GPIO_OTYPER_OT3);
+	GPIOC->OTYPER &= ~(GPIO_OTYPER_OT0 | GPIO_OTYPER_OT1 | GPIO_OTYPER_OT10 | GPIO_OTYPER_OT12);
 	// set pins to no pull up or pull down
-	GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPD0 | GPIO_PUPDR_PUPD1 | GPIO_PUPDR_PUPD2 | GPIO_PUPDR_PUPD3);
+	GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPD0 | GPIO_PUPDR_PUPD1 | GPIO_PUPDR_PUPD10 | GPIO_PUPDR_PUPD12);
 	// set pins to high speed
-	GPIOC->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEED0 | GPIO_OSPEEDR_OSPEED1 | GPIO_OSPEEDR_OSPEED2 | GPIO_OSPEEDR_OSPEED3);
-	GPIOC->OSPEEDR |= (GPIO_OSPEEDR_OSPEED0_1 | GPIO_OSPEEDR_OSPEED1_1 | GPIO_OSPEEDR_OSPEED2_1 | GPIO_OSPEEDR_OSPEED3_1);
+	GPIOC->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEED0 | GPIO_OSPEEDR_OSPEED1 | GPIO_OSPEEDR_OSPEED10 | GPIO_OSPEEDR_OSPEED12);
+	GPIOC->OSPEEDR |= (GPIO_OSPEEDR_OSPEED0_1 | GPIO_OSPEEDR_OSPEED1_1 | GPIO_OSPEEDR_OSPEED10_1 | GPIO_OSPEEDR_OSPEED12_1);
 }
 
 void GPIO_Air(void) {
@@ -48,7 +48,7 @@ void GPIO_Air(void) {
 	GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED5_1 | GPIO_OSPEEDR_OSPEED6_1);
 }
 
-#define DELAY 2500
+#define DELAY 1500
 
 
 
@@ -100,29 +100,29 @@ static uint32_t pinA1_R = GPIO_ODR_OD5, pinA2_R = GPIO_ODR_OD6,
 				pinA1_L = GPIO_ODR_OD0, pinA2_L = GPIO_ODR_OD1;
 
 static uint32_t pinB1_R = GPIO_ODR_OD8, pinB2_R = GPIO_ODR_OD9,
-				pinB1_L = GPIO_ODR_OD2, pinB2_L = GPIO_ODR_OD3;
+				pinB1_L = GPIO_ODR_OD10, pinB2_L = GPIO_ODR_OD12;
 
 
 /* old stepper motor driver code */
 void move_robot(enum DIR dir) {
 	for (int j = 0; j < 32; j++) {
 		switch (dir) {
-			case FORWARD:
+			case BACKWARD:
 				// step 1
 				GPIOC->ODR |= pinA1_R | pinA2_L;
 				GPIOC->ODR &= ~(pinA2_R | pinA1_L);
 				break;
-			case BACKWARD:
+			case FORWARD:
 				// step 1
 				GPIOC->ODR |= pinA2_R | pinA1_L;
 				GPIOC->ODR &= ~(pinA1_R | pinA2_L);
 				break;
-			case LEFT:
+			case RIGHT:
 				// step 1
 				GPIOC->ODR |= pinA1_R | pinA1_L;
 				GPIOC->ODR &= ~(pinA2_R | pinA2_L);
 				break;
-			case RIGHT:
+			case LEFT:
 				// step 1
 				GPIOC->ODR |= pinA2_R | pinA2_L;
 				GPIOC->ODR &= ~(pinA1_R | pinA1_L);
@@ -147,4 +147,15 @@ void move_robot(enum DIR dir) {
 		GPIOC->ODR ^= pinB2_R | pinB2_L;
 		for (int i = 0; i < DELAY; i++);
 	}
+}
+
+void motor_initializer(void) {
+		for(int i=0; i < 10000; i++);
+		move_robot(FORWARD);
+		for(int i=0; i < 10000; i++);
+		move_robot(BACKWARD);
+		//for(int i=0; i < 10000; i++);
+		//move_robot(RIGHT);
+		//for(int i=0; i < 10000; i++);
+		//move_robot(LEFT);
 }
