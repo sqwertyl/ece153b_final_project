@@ -8,6 +8,7 @@
 #include "MOTOR.h"
 #include "DISTANCE.h"
 #include "NUNCHUK.h"
+#include "WATERLEVEL.h"
 
 
 // nunchuk data
@@ -34,6 +35,13 @@ int main(void) {
 	I2C_GPIO_Init();
 	I2C_Initialization();
 	// ULTRASONIC_Init();
+	Trigger_Setup();
+	Input_Capture_Setup();
+	int cm = 0;
+	while(1)
+	{
+		cm = get_waterlevel();
+	}
 	LED_Init();
 		
 	// initialize UART -> 1 for BT, 2 for USB

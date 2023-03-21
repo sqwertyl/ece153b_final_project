@@ -474,6 +474,16 @@
               <FileType>5</FileType>
               <FilePath>.\src\NUNCHUK.h</FilePath>
             </File>
+            <File>
+              <FileName>WATERLEVEL.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\WATERLEVEL.c</FilePath>
+            </File>
+            <File>
+              <FileName>WATERLEVEL.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\WATERLEVEL.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
