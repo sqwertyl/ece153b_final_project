@@ -17,17 +17,17 @@ extern void Error_Handler(void);
 //===============================================================================
 void I2C_GPIO_Init(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
-	GPIOB->AFR[0] &= ~(GPIO_AFRL_AFSEL6 + GPIO_AFRL_AFSEL7);      // set alternate function
-	GPIOB->AFR[0] |= (GPIO_AFRL_AFSEL6_2 + GPIO_AFRL_AFSEL7_2);   // ^
+	GPIOB->AFR[0] &= ~(GPIO_AFRL_AFSEL8 + GPIO_AFRL_AFSEL9);      // set alternate function
+	GPIOB->AFR[0] |= (GPIO_AFRL_AFSEL8_2 + GPIO_AFRL_AFSEL9_2);   // ^
 	
-	GPIOB->MODER &= ~(GPIO_MODER_MODE6 + GPIO_MODER_MODE7);       // set pins to alternate mode
-	GPIOB->MODER |= GPIO_MODER_MODE6_1 + GPIO_MODER_MODE7_1;     // ^
+	GPIOB->MODER &= ~(GPIO_MODER_MODE8 + GPIO_MODER_MODE9);       // set pins to alternate mode
+	GPIOB->MODER |= GPIO_MODER_MODE8_1 + GPIO_MODER_MODE9_1;     // ^
 
 	
-	GPIOB->OTYPER |= GPIO_OTYPER_OT6 + GPIO_OTYPER_OT7;	// set to open drain
-	GPIOB->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR6 + GPIO_OSPEEDER_OSPEEDR7;	// set to very high speed
-	GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPD6 + GPIO_PUPDR_PUPD7);		// enable pull-up
-	GPIOB->PUPDR |= GPIO_PUPDR_PUPD6_0 + GPIO_PUPDR_PUPD7_0;	// ^
+	GPIOB->OTYPER |= GPIO_OTYPER_OT8 + GPIO_OTYPER_OT9;	// set to open drain
+	GPIOB->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR8 + GPIO_OSPEEDER_OSPEEDR9;	// set to very high speed
+	GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPD8 + GPIO_PUPDR_PUPD9);		// enable pull-up
+	GPIOB->PUPDR |= GPIO_PUPDR_PUPD8_0 + GPIO_PUPDR_PUPD9_0;	// ^
 }
 	
 #define I2C_TIMINGR_PRESC_POS	28
@@ -44,7 +44,7 @@ void I2C_Initialization(void){
 	
 	RCC->APB1ENR1 |= RCC_APB1ENR1_I2C1EN;
 	RCC->CCIPR &= ~RCC_CCIPR_I2C1SEL;
-	RCC->CCIPR |= RCC_CCIPR_I2C1SEL_1;
+	RCC->CCIPR |= RCC_CCIPR_I2C1SEL_0;
 	RCC->APB1RSTR1 |= RCC_APB1RSTR1_I2C1RST;
 	RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_I2C1RST;
 	
@@ -59,8 +59,8 @@ void I2C_Initialization(void){
 	I2C1->CR2 |= I2C_CR2_NACK;		// nack generation
 	
 	I2C1->TIMINGR |= (39U << I2C_TIMINGR_PRESC_POS);	// prescaler value
-	I2C1->TIMINGR |= (3U << I2C_TIMINGR_SDADEL_POS);	// data hold time = 1250ns
-	I2C1->TIMINGR |= (3U << I2C_TIMINGR_SCLDEL_POS);	// clock setup time = 1000ns
+	I2C1->TIMINGR |= (9U << I2C_TIMINGR_SDADEL_POS);	// data hold time = 1250ns
+	I2C1->TIMINGR |= (9U << I2C_TIMINGR_SCLDEL_POS);	// clock setup time = 1000ns
 	I2C1->TIMINGR |= (49U << I2C_TIMINGR_SCLL_POS);		// low clock period = 4.7us
 	I2C1->TIMINGR |= (39U << I2C_TIMINGR_SCLH_POS);		// high clock period = 4us
 

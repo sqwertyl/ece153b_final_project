@@ -12,11 +12,11 @@ Our project is a Wii nunchuk controlled robot mounted with an air pump tapped in
 
 | Pin | Function | Pin | Function |
 | --- | -------- | --- | -------- |
-| PC0 | Stepper Motor | PB6 | I2C Clock |
-| PC1 | Stepper Motor | PB7 | I2C Data |
+| PC0 | Stepper Motor | PB8 | I2C Clock |
+| PC1 | Stepper Motor | PB9 | I2C Data |
 | PC2 | Stepper Motor | PA0 | Ultrasonic Sensor Trigger |
 | PC3 | Stepper Motor | PA1 | Ultrasonic Sensor Echo |
-| PC5 | Stepper Motor |
-| PC6 | Stepper Motor |
+| PC5 | Stepper Motor | PA2 | Air Pump |
+| PC6 | Stepper Motor | PA3 | Air Pump |
 | PC8 | Stepper Motor |
 | PC9 | Stepper Motor |

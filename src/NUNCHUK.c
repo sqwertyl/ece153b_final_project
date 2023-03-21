@@ -1,11 +1,11 @@
 #include "NUNCHUK.h"
 
 static enum DIR direction = NONE;
-static bool Z_button_pressed = false;
+static uint8_t Z_button_pressed = 0;
 
 void parse_Nunchuk(uint8_t *data) {
     if (data[0] > 0) {
-        if (data[1] > 200) {
+        if (data[1] > 200)
             direction = FORWARD;
         else if (data[1] < 40)
             direction = BACKWARD;
@@ -17,10 +17,10 @@ void parse_Nunchuk(uint8_t *data) {
             direction = NONE;
     }
 
-    Z_button_pressed = (data[5] >> 0) & 1) ? false : true;
+    Z_button_pressed = (data[5] >> 0 & 1) ? 0 : 1;
 
 }
 
 enum DIR get_Direction(void) { return direction; }
 
-bool get_Z_pressed(void) { return Z_button_pressed; }
+uint8_t get_Z_pressed(void) { return Z_button_pressed; }

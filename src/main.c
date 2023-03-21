@@ -1,5 +1,5 @@
 #include "stm32l476xx.h"
-#include "STEPPER.h"
+#include "MOTOR.h"
 #include "EXTI.h"
 #include "SysClock.h"
 #include "LED.h"
@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include "DISTANCE.h"
 #include "NUNCHUK.h"
+
+
+
 
 int main(void) {
 	//STEPPER_MOTOR_Init();
@@ -34,32 +37,42 @@ int main(void) {
 	I2C_SendData(I2C1, n_addr_send, &n_init1, 2);
 	I2C_SendData(I2C1, n_addr_send, &n_init2, 2);
 
-	bool close_enough = false;
+	static uint8_t close_enough = 0;
+	static enum DIR direction;
+	static uint8_t z_button;
 
 	while (1) {
 		uint8_t data[7] = {0};
 		I2C_ReceiveData(I2C1, n_addr_receive, &data, 6);
 		I2C_SendData(I2C1, n_addr_receive, &n_done, 2);
+		
 		// debug nunchuk data
-		// printf("joyX: %i\t\t", data[0]);
-		// printf("joyY: %i\t\t", data[1]);
-		// printf("Z: %i\t", (data[5] >> 0) & 1);
-		// printf("C: %i\t", (data[5] >> 1) & 1);
+		printf("joyX: %i\t\t", data[0]);
+		printf("joyY: %i\t\t", data[1]);
+		printf("Z: %i\t", (data[5] >> 0) & 1);
+		printf("C: %i\t", (data[5] >> 1) & 1);
 
-		enum DIR direction = parse_Nunchuk(data);
+		parse_Nunchuk(data);
+		direction = get_Direction();
+		z_button = get_Z_pressed();
+		close_enough = get_Distance() < 3 ? 1 : 0;
+		
 		if (direction == FORWARD)
-			printf("FOWARD");
+			printf("FOWARD\t");
 		else if (direction == BACKWARD)
-			printf("BACKWARD");
+			printf("BACKWARD\t");
 		else if (direction == LEFT)
-			printf("LEFT");
+			printf("LEFT\t");
 		else if (direction == RIGHT)
-			printf("RIGHT");
+			printf("RIGHT\t");
+		else if (direction == NONE)
+			printf("NONE\t");
+		
+		printf( z_button ? "Z pressed poggers\n" : "\n");
+		printf( close_enough ? "close\n" : "not close\n");
 		
 		move_robot(direction);
 		
-		
-
 		
 	}
 	

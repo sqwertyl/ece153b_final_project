@@ -1,9 +1,9 @@
 #include "DISTANCE.h"
 
-uint32_t volatile currentValue = 0;
-uint32_t volatile lastValue = 0;
-uint32_t volatile overflowCount = 0;
-uint32_t volatile timeInterval = 0;
+static uint32_t volatile currentValue = 0;
+static uint32_t volatile lastValue = 0;
+static uint32_t volatile overflowCount = 0;
+static uint32_t volatile timeInterval = 0;
 
 void ULTRASONIC_Init(void) {
 
