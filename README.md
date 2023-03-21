@@ -16,11 +16,11 @@ The robot also features an ultrasonic sensor that measures the distance in front
 | --- | -------- | --- | -------- |
 | **PC0** | Stepper Motor | **PB8** | I2C Clock |
 | **PC1** | Stepper Motor | **PB9** | I2C Data |
-| **PC2** | Stepper Motor | **PA0** | Ultrasonic Sensor Trigger |
-| **PC3** | Stepper Motor | **PA1** | Ultrasonic Sensor Echo |
-| **PC5** | Stepper Motor | **PA2** | Air Pump |
-| **PC6** | Stepper Motor | **PA3** | Air Pump |
-| **PC8** | Stepper Motor |
+| **PC10** | Stepper Motor | **PA0** | Ultrasonic Sensor Trigger |
+| **PC12** | Stepper Motor | **PA1** | Ultrasonic Sensor Echo |
+| **PC5** | Stepper Motor | **PA5** | Air Pump |
+| **PC6** | Stepper Motor | **PA6** | Air Pump |
+| **PC8** | Stepper Motor | 
 | **PC9** | Stepper Motor |
 
 
