@@ -1,12 +1,14 @@
 # ECE153B Final Project
 
-[Project Site](https://sites.google.com/view/ece153b-project-proposal/home)
+<a href="https://sites.google.com/view/ece153b-project-proposal/home" style="font-size: x-large; font-weight: 500">Project Site</a>
 
 This repository contains the final project for ECE153B. The project was implemented using the [STM32L476RG Nucleo Board](https://www.st.com/en/evaluation-tools/nucleo-l476rg.html) from STMicroelectronics.
 
 ## Description
 
-Our project is a robot controlled by a Wii Nunchuk, with an air pump connected to a container of fluid. It is controlled using the joystick and buttons on the Nunchuk. The robot also features an ultrasonic sensor that measures the distance in front of it, ensuring that the fluid is only dispensed if the target container is close enough.
+Our project is a robot controlled by a Wii Nunchuk, with an air pump connected to a container of fluid. It is controlled using the joystick and buttons on the Nunchuk.
+
+The robot also features an ultrasonic sensor that measures the distance in front of it, ensuring that the fluid is only dispensed if the target container is close enough.
 
 ### Pins Used
 
