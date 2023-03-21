@@ -7,7 +7,7 @@ void System_Clock_Init(void) {
 	
 	// Set MSI clock range
 	RCC->CR &= ~RCC_CR_MSIRANGE;
-	RCC->CR |= RCC_CR_MSIRANGE_8; // [DONE] - Replace with value that will make range 8 MHz
+	RCC->CR |= RCC_CR_MSIRANGE_8; // [DONE] - Replace with value that will make range 16 MHz
 	
 	// Use the MSI clock range that is defined in RCC_CR
 	RCC->CR |= RCC_CR_MSIRGSEL; // [DONE] - Replace with value that will select range in RCC->CR

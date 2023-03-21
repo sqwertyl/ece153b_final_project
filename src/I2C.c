@@ -17,8 +17,8 @@ extern void Error_Handler(void);
 //===============================================================================
 void I2C_GPIO_Init(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
-	GPIOB->AFR[0] &= ~(GPIO_AFRL_AFSEL8 + GPIO_AFRL_AFSEL9);      // set alternate function
-	GPIOB->AFR[0] |= (GPIO_AFRL_AFSEL8_2 + GPIO_AFRL_AFSEL9_2);   // ^
+	GPIOB->AFR[1] &= ~(GPIO_AFRH_AFSEL8 + GPIO_AFRH_AFSEL9);      // set alternate function
+	GPIOB->AFR[1] |= (GPIO_AFRH_AFSEL8_2 + GPIO_AFRH_AFSEL9_2);   // ^
 	
 	GPIOB->MODER &= ~(GPIO_MODER_MODE8 + GPIO_MODER_MODE9);       // set pins to alternate mode
 	GPIOB->MODER |= GPIO_MODER_MODE8_1 + GPIO_MODER_MODE9_1;     // ^

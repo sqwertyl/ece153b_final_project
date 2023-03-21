@@ -2,6 +2,7 @@
 
 static enum DIR direction = NONE;
 static uint8_t Z_button_pressed = 0;
+static uint8_t C_button_pressed = 0;
 
 void parse_Nunchuk(uint8_t *data) {
     if (data[0] > 0) {
@@ -18,9 +19,12 @@ void parse_Nunchuk(uint8_t *data) {
     }
 
     Z_button_pressed = (data[5] >> 0 & 1) ? 0 : 1;
+	C_button_pressed = (data[5] >> 1 & 1) ? 0 : 1;
 
 }
 
 enum DIR get_Direction(void) { return direction; }
 
 uint8_t get_Z_pressed(void) { return Z_button_pressed; }
+
+uint8_t get_C_pressed(void) { return C_button_pressed; }

@@ -27,7 +27,7 @@ void ULTRASONIC_Init(void) {
 
 	// setup trigger timer (TIM2)
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM5EN;			// enable Timer 5
-	TIM5->PSC = 3;									// set prescaler to 15
+	TIM5->PSC = 15;									// set prescaler to 15
 	TIM5->CR1 |= TIM_CR1_ARPE;						// enable ARR preload
 	TIM5->ARR = 0xFFFFU;							// set auto reload value to maximum
 	TIM5->CCR2 = 10;								// sets 10us pulse width
@@ -47,7 +47,7 @@ void ULTRASONIC_Init(void) {
 
 	// setup echo (input capture) timer (TIM5)
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;			// enable timer 2
-	TIM2->PSC = 3;									// set prescaler to 15
+	TIM2->PSC = 15;									// set prescaler to 15
 	TIM2->CR1 |= TIM_CR1_ARPE;						// enable auto reload preload
 	TIM2->ARR = 0xFFFFFFFFU;						// set reload value to maximum
 	TIM2->CCMR1 &= ~TIM_CCMR1_CC1S;					// set input capture mode bits, input capture is mapped to Timer Input 1
@@ -73,7 +73,7 @@ int get_Distance(void) {
 
 void TIM2_IRQHandler(void) {
 	// This Interrupt Handler compute the difference between two consecutive CCR values
-	uint32_t tmp;
+	// uint32_t tmp;
 	
 	if(TIM2->SR & TIM_SR_UIF) {
 		TIM2->SR &= ~TIM_SR_UIF;
