@@ -48,7 +48,7 @@ void GPIO_Air(void) {
 	GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED2_1 | GPIO_OSPEEDR_OSPEED3_1);
 }
 
-#define DELAY 6000
+#define DELAY 1500
 
 
 
@@ -154,8 +154,8 @@ void motor_initializer(void) {
 		move_robot(FORWARD);
 		for(int i=0; i < 10000; i++);
 		move_robot(BACKWARD);
-		for(int i=0; i < 10000; i++);
-		move_robot(RIGHT);
-		for(int i=0; i < 10000; i++);
-		move_robot(LEFT);
+		//for(int i=0; i < 10000; i++);
+		//move_robot(RIGHT);
+		//for(int i=0; i < 10000; i++);
+		//move_robot(LEFT);
 }
