@@ -30,6 +30,7 @@ static uint8_t data[6] = {0};
 int main(void) {
 	// initialize pins and functions
 	MOTOR_Init();
+	motor_initializer();
 	System_Clock_Init();
 	I2C_GPIO_Init();
 	I2C_Initialization();
