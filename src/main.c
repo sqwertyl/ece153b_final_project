@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "DISTANCE.h"
+#include "NUNCHUK.h"
 
 int main(void) {
 	//STEPPER_MOTOR_Init();
@@ -33,36 +34,33 @@ int main(void) {
 	I2C_SendData(I2C1, n_addr_send, &n_init1, 2);
 	I2C_SendData(I2C1, n_addr_send, &n_init2, 2);
 
+	bool close_enough = false;
+
 	while (1) {
-		uint8_t data[6] = {0};
+		uint8_t data[7] = {0};
 		I2C_ReceiveData(I2C1, n_addr_receive, &data, 6);
 		I2C_SendData(I2C1, n_addr_receive, &n_done, 2);
+		// debug nunchuk data
+		// printf("joyX: %i\t\t", data[0]);
+		// printf("joyY: %i\t\t", data[1]);
+		// printf("Z: %i\t", (data[5] >> 0) & 1);
+		// printf("C: %i\t", (data[5] >> 1) & 1);
+
+		enum DIR direction = parse_Nunchuk(data);
+		if (direction == FORWARD)
+			printf("FOWARD");
+		else if (direction == BACKWARD)
+			printf("BACKWARD");
+		else if (direction == LEFT)
+			printf("LEFT");
+		else if (direction == RIGHT)
+			printf("RIGHT");
+		
+		move_robot(direction);
 		
 		
-		printf("joyX: %i\t\t", data[0]);
-		printf("joyY: %i\t\t", data[1]);
-		printf("Z: %i\t", (data[5] >> 0) & 1);
-		printf("C: %i\t", (data[5] >> 1) & 1);
+
 		
-		if (data[0] > 0) {
-			if (data[1] > 200) {
-				move_robot(FORWARD);
-				printf("moved forward\n");
-			} else if (data[1] < 40) {
-				move_robot(BACKWARD);
-				printf("moved backward\n");
-			} else if (data[0] > 200) {
-				move_robot(RIGHT);
-				printf("moved right\n");
-			} else if (data[0] < 40) {
-				move_robot(LEFT);
-				printf("moved left\n");
-			} else {
-				printf("\n");
-			}
-		}
-		
-		// printf("distance: %i\n", get_Distance());
 	}
 	
 	return 0;

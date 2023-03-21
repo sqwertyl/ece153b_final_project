@@ -5,7 +5,7 @@
 
 enum DIR{
 	FORWARD, BACKWARD,
-	RIGHT, LEFT,
+	RIGHT, LEFT, NONE,
 };
 
 

@@ -63,6 +63,8 @@ void move_robot(enum DIR dir) {
 			GPIOC->ODR |= pinA2_R | pinA2_L;
 			GPIOC->ODR &= ~(pinA1_R | pinA1_L);
 			break;
+		case NONE:
+			return;
 	}
 	
 	GPIOC->ODR &= ~(pinB1_R | pinB1_L);
