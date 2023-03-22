@@ -159,8 +159,6 @@ void Sensor2_TIM_Init(void) {
 void TIM4_IRQHandler(void) {
 	// [TODO]
 	// This Interrupt Handler compute the difference between two consecutive CCR values
-	uint32_t tmp;
-	
 	if(TIM4->SR & TIM_SR_UIF) {
 		TIM4->SR &= ~TIM_SR_UIF;
 

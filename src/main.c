@@ -26,80 +26,126 @@ static uint8_t c_button = 0;
 static uint8_t pump_enable = 0;
 static uint8_t data[6] = {0};
 
-int volatile distance_S1 = 100;
-int volatile distance_S2 = 100;
+int volatile distance_S1 = 100; // assuming this is cup_distance
+int volatile distance_S2 = 100; // assuming this is cup_waterlevel
+
+static enum ROBOT_MODE{
+	DEFAULT_MODE,
+	NUNCHUCK_MODE,
+	BLUETOOTH_MODE
+} mode;
 
 int main(void) {
-	// initialize pins and functions
-	// MOTOR_Init();
-	// motor_initializer();
-	System_Clock_Init();
-	// I2C_GPIO_Init();
-	// I2C_Initialization();
-	ULTRASONIC_Init();
-	LED_Init();
-		
-	// initialize UART -> 1 for BT, 2 for USB
-	Init_USARTx(2);
-	printf("initialized UART over: %s", (RCC->APB1ENR1 & RCC_APB1ENR1_USART2EN) ? 
-			"USB\n" : "BT\n");
-
-	// initialize nunchuk
-	// I2C_SendData(I2C1, n_addr_send, &n_init1, 2);
-	// I2C_SendData(I2C1, n_addr_send, &n_init2, 2);
+	// set robot mode
+	mode = DEFAULT_MODE;
 	
-	while (1) {
-		// // receive nunchuk data
-		// I2C_ReceiveData(I2C1, n_addr_receive, &data, 6);
-		// I2C_SendData(I2C1, n_addr_receive, &n_done, 2);
-		// if (first_run) {
-		// 	data[0] = 128; data[1] = 128; data[5] = 255;
-		// 	first_run ^= first_run;
-		// }
+	// setup system clock
+	System_Clock_Init();
+	
+	// initialize pins and functions
+	MOTOR_Init();
+	// motor_initializer();
+	ULTRASONIC_Init();
+	
+	// LED_Init();
+	
+	// DEFAULT BEHAVIOR
+	if(mode == DEFAULT_MODE) {
+		while(1){
+			// I AM NOT SURE IF THESE TWO VARIABLES WILL BE CONSTANTLY UPDATED...????? VOLATILE means they are right...?
+			distance_S1 = get_Distance_S1();
+			distance_S2 = get_Distance_S2();
+			
+			while(distance_S1 >= 3) {
+				move_robot(FORWARD);
+				for(int i=0; i < 100000; i++);
+				move_robot(BACKWARD);
+				for(int i=0; i < 100000; i++);
+			}
+			
+			pump_enable = 1;
+			while(distance_S2 <= 5) {
+				enable_pump(pump_enable);
+			}
+			
+			pump_enable = 0;
+			enable_pump(pump_enable);
+		}
+	}
+	
+	// NUNCHUCK CONTROLLED BEHAVIOR
+	if(mode == NUNCHUCK_MODE) {
+		I2C_GPIO_Init();
+		I2C_Initialization();
 		
-		// // debug nunchuk data
-		// printf("joyX: %i\t", data[0]);
-		// printf("joyY: %i\t", data[1]);
-		// printf("Z: %i\t", (data[5] >> 0) & 1);
-		// printf("C: %i\t", (data[5] >> 1) & 1);
+		// initialize nunchuk
+		I2C_SendData(I2C1, n_addr_send, &n_init1, 2);
+		I2C_SendData(I2C1, n_addr_send, &n_init2, 2);
+		
+		
+		while(1) {
+			// receive nunchuk data
+			I2C_ReceiveData(I2C1, n_addr_receive, &data, 6);
+			I2C_SendData(I2C1, n_addr_receive, &n_done, 2);
+			if (first_run) {
+				data[0] = 128; data[1] = 128; data[5] = 255;
+				first_run ^= first_run;
+			}
+			
+			parse_Nunchuk(data);
+			
+			// get_Direction onlly returns FORWARD, BACKWARD, or NONE (no left or right)
+			direction = get_Direction();
+			z_button = get_Z_pressed();
+			c_button = get_C_pressed();
+			
+			move_robot(direction);
 
-		// // parse nunchuk and ultrasonic sensor
-		// parse_Nunchuk(data);
-		// direction = get_Direction();
-		// z_button = get_Z_pressed();
-		// c_button = get_C_pressed();
-		// close_enough = get_Distance() < 3 ? 1 : 0;
-		// pump_enable = (z_button && close_enough) || c_button;
-		distance_S1 = get_Distance_S1();
-		distance_S2 = get_Distance_S2();
-
+			distance_S1 = get_Distance_S1();
+			distance_S2 = get_Distance_S2();
+			
+			// // debug nunchuk data
+			// printf("joyX: %i\t", data[0]);
+			// printf("joyY: %i\t", data[1]);
+			// printf("Z: %i\t", (data[5] >> 0) & 1);
+			// printf("C: %i\t", (data[5] >> 1) & 1);
+			
+			close_enough = get_Distance_S1() < 3 ? 1 : 0;
+			pump_enable = (z_button && close_enough && distance_S2 <= 5) || c_button;
 		
-		
-		// // debug motor controls
-		// if (direction == FORWARD)
-		// 	printf("FOWARD\t");
-		// else if (direction == BACKWARD)
-		// 	printf("BACKWARD\t");
-		// else if (direction == LEFT)
-		// 	printf("LEFT\t");
-		// else if (direction == RIGHT)
-		// 	printf("RIGHT\t");
-		// else if (direction == NONE)
-		// 	printf("NONE\t");
-		
-		// // debug other controls
-		// printf( z_button ? "Z\t" : "\t");
-		// printf( c_button ? "C\t" : "\t");
-		// printf( close_enough ? "close\t" : "not close\t");
-		printf("distance 1: %i\t distance 2: %i\t", distance_S1, distance_S2);
-		// printf( pump_enable ? c_button ? "pump on: override\n" : "pump on\n" : "pump off%s", 
-		// 		((z_button && !close_enough) ? ": not close enough\n" : "\n"));
-		printf("\n");
-		
-		// // instruct robot
-		// move_robot(direction);
-		// pump_enable ? LED_On() : LED_Off(); // enable_pump(pump_enable);
-		
-	}	
+			enable_pump(pump_enable);
+			
+			// // debug motor controls
+			// if (direction == FORWARD)
+			// 	printf("FOWARD\t");
+			// else if (direction == BACKWARD)
+			// 	printf("BACKWARD\t");
+			// else if (direction == LEFT)
+			// 	printf("LEFT\t");
+			// else if (direction == RIGHT)
+			// 	printf("RIGHT\t");
+			// else if (direction == NONE)
+			// 	printf("NONE\t");
+			
+			// // debug other controls
+			// printf( z_button ? "Z\t" : "\t");
+			// printf( c_button ? "C\t" : "\t");
+			// printf( close_enough ? "close\t" : "not close\t");
+			// printf("distance 1: %i\t distance 2: %i\t", distance_S1, distance_S2);
+			// printf( pump_enable ? c_button ? "pump on: override\n" : "pump on\n" : "pump off%s", 
+			// 		((z_button && !close_enough) ? ": not close enough\n" : "\n"));
+			// printf("\n");
+			
+			
+		}
+	
+	}
+	
+	// BLUETOOTH CONTROLLED BEHAVIOR
+	if(mode == BLUETOOTH_MODE) {
+		// initialize UART -> 1 for BT, 2 for USB
+		Init_USARTx(2);
+		printf("initialized UART over: %s", (RCC->APB1ENR1 & RCC_APB1ENR1_USART2EN) ? 
+				"USB\n" : "BT\n");
+	}
 }
-

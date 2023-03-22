@@ -10,10 +10,10 @@ void parse_Nunchuk(uint8_t *data) {
             direction = FORWARD;
         else if (data[1] < 40)
             direction = BACKWARD;
-        else if (data[0] > 200)
-            direction = RIGHT;
-        else if (data[0] < 40)
-            direction = LEFT;
+        //else if (data[0] > 200)
+        //    direction = RIGHT;
+       // else if (data[0] < 40)
+       //    direction = LEFT;
         else
             direction = NONE;
     }
