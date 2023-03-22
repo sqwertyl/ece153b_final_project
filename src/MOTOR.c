@@ -1,5 +1,6 @@
 #include "MOTOR.h"
 
+
 void MOTOR_Init(void) {
 	GPIO_Init_R();
 	GPIO_Init_L();
@@ -48,7 +49,7 @@ void GPIO_Air(void) {
 	GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED5_1 | GPIO_OSPEEDR_OSPEED6_1);
 }
 
-#define DELAY 1700
+#define DELAY 6000
 
 
 void enable_pump(uint8_t enable) {
@@ -69,7 +70,7 @@ static uint32_t pinB1_R = GPIO_ODR_OD8, pinB2_R = GPIO_ODR_OD9,
 
 /* stepper motor driver code */
 void move_robot(enum DIR dir) {
-	for (int j = 0; j < 8; j++) {
+	for (int j = 0; j < 16; j++) {
 		switch (dir) {
 			case BACKWARD:
 				// step 1
