@@ -1,5 +1,6 @@
 #include "UART.h"
 
+/* initialize UART based on preference */
 void Init_USARTx(int x) {
 	if(x == 1) {
 		UART1_Init();
@@ -14,18 +15,21 @@ void Init_USARTx(int x) {
 	}
 }
 
+/* init UART 1 - BT */
 void UART1_Init(void) {
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 	RCC->CCIPR |= RCC_CCIPR_USART1SEL_0;
 	RCC->CCIPR &= ~RCC_CCIPR_USART1SEL_1;
 }
 
+/* init UART 2 - USB */
 void UART2_Init(void) {
 	RCC->APB1ENR1 |= RCC_APB1ENR1_USART2EN;
 	RCC->CCIPR |= RCC_CCIPR_USART2SEL_0;
 	RCC->CCIPR &= ~RCC_CCIPR_USART2SEL_1;
 }
 
+/* init UART1 pins */
 void UART1_GPIO_Init(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
 	GPIOB->MODER &= ~(GPIO_MODER_MODE6_0 + GPIO_MODER_MODE7_0);	// set mode to alternate
@@ -39,6 +43,7 @@ void UART1_GPIO_Init(void) {
 	GPIOB->PUPDR |= GPIO_PUPDR_PUPD6_0 + GPIO_PUPDR_PUPD7_0;						// ^
 }
 
+/* init UART2 pins */
 void UART2_GPIO_Init(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 	GPIOA->MODER &= ~(GPIO_MODER_MODE2_0 + GPIO_MODER_MODE3_0);	// set mode to alternate
@@ -52,6 +57,7 @@ void UART2_GPIO_Init(void) {
 	GPIOA->PUPDR |= GPIO_PUPDR_PUPD2_0 + GPIO_PUPDR_PUPD3_0;						// ^
 }
 
+/* general USART configurations */
 void USART_Init(USART_TypeDef* USARTx) {
 	USARTx->CR1 &= ~USART_CR1_UE;	// disable UART to change registers
 	
@@ -66,6 +72,7 @@ void USART_Init(USART_TypeDef* USARTx) {
 	
 }
 
+/* read from UART */
 uint8_t USART_Read (USART_TypeDef * USARTx) {
 	// SR_RXNE (Read data register not empty) bit is set by hardware
 	while (!(USARTx->ISR & USART_ISR_RXNE));  // Wait until RXNE (RX not empty) bit is set
@@ -74,6 +81,7 @@ uint8_t USART_Read (USART_TypeDef * USARTx) {
 	// Reading USART_DR automatically clears the RXNE flag 
 }
 
+/* write to UART */
 void USART_Write(USART_TypeDef * USARTx, uint8_t *buffer, uint32_t nBytes) {
 	int i;
 	// TXE is cleared by a write to the USART_DR register.

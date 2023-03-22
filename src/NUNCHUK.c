@@ -4,6 +4,8 @@ static enum DIR direction = NONE;
 static uint8_t Z_button_pressed = 0;
 static uint8_t C_button_pressed = 0;
 
+
+/* parse data for easier readability */
 void parse_Nunchuk(uint8_t *data) {
     if (data[0] > 0) {
         if (data[1] > 200)
@@ -23,8 +25,11 @@ void parse_Nunchuk(uint8_t *data) {
 
 }
 
+/* return direction to move motor */
 enum DIR get_Direction(void) { return direction; }
 
+/* return if Z button is pressed */
 uint8_t get_Z_pressed(void) { return Z_button_pressed; }
 
+/* return if C button is pressed */
 uint8_t get_C_pressed(void) { return C_button_pressed; }

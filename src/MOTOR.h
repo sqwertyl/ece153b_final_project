@@ -17,5 +17,4 @@ void GPIO_Air(void);
 void move_robot(enum DIR dir);
 void enable_pump(uint8_t enable);
 
-void motor_initializer(void);
 #endif

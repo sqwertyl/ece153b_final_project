@@ -1,12 +1,13 @@
 #include "MOTOR.h"
 
-
+/* initialize all motors */
 void MOTOR_Init(void) {
 	GPIO_Init_R();
 	GPIO_Init_L();
 	GPIO_Air();
 }
 
+/* initialize pins for right side motors */
 void GPIO_Init_R(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 	// set pins to output
@@ -21,6 +22,7 @@ void GPIO_Init_R(void) {
 	GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPD5 | GPIO_PUPDR_PUPD6 | GPIO_PUPDR_PUPD8 | GPIO_PUPDR_PUPD9);
 }
 
+/* initialize pins for left side motors */
 void GPIO_Init_L(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 	// set pins to output
@@ -35,6 +37,7 @@ void GPIO_Init_L(void) {
 	GPIOC->OSPEEDR |= (GPIO_OSPEEDR_OSPEED0_1 | GPIO_OSPEEDR_OSPEED1_1 | GPIO_OSPEEDR_OSPEED10_1 | GPIO_OSPEEDR_OSPEED12_1);
 }
 
+/* initialize pins for the air pump */
 void GPIO_Air(void) {
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 	// set pins to output
@@ -51,7 +54,7 @@ void GPIO_Air(void) {
 
 #define DELAY 6000
 
-
+/* enable/disable air pump */
 void enable_pump(uint8_t enable) {
 	GPIOA->ODR &= ~GPIO_ODR_OD6;
 	
@@ -60,7 +63,7 @@ void enable_pump(uint8_t enable) {
 }
 
 
-/* stepper motor driver code */
+/* stepper motor pin mapping */
 static uint32_t pinA1_R = GPIO_ODR_OD5, pinA2_R = GPIO_ODR_OD6,
 				pinA1_L = GPIO_ODR_OD0, pinA2_L = GPIO_ODR_OD1;
 
@@ -112,10 +115,4 @@ void move_robot(enum DIR dir) {
 		GPIOC->ODR ^= pinB2_R | pinB2_L;
 		for (int i = 0; i < DELAY; i++);
 	}
-}
-
-void motor_initializer(void) {
-		for(int i=0; i < 10000; i++);
-		move_robot(FORWARD);
-		for(int i=0; i < 10000; i++);
 }

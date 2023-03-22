@@ -25,21 +25,17 @@ static uint8_t z_button = 0;
 static uint8_t c_button = 0;
 static uint8_t pump_enable = 0;
 static uint8_t data[6] = {0};
+int volatile distance_S1 = 20;
+int volatile distance_S2 = 20;
 
-int volatile distance_S1 = 100;
-int volatile distance_S2 = 100;
-
- int main(void) {
+int main(void) {
 	// initialize pins and functions
 	MOTOR_Init();
-//motor_initializer();
 	System_Clock_Init();
 	I2C_GPIO_Init();
 	I2C_Initialization();
 	ULTRASONIC_Init();
 	LED_Init();
-	 
-	 
 		
 	// initialize UART -> 1 for BT, 2 for USB
 	Init_USARTx(2);
@@ -51,10 +47,11 @@ int volatile distance_S2 = 100;
 	I2C_SendData(I2C1, n_addr_send, &n_init2, 2);
 	
 	while (1) {
-		
 		// receive nunchuk data
 		I2C_ReceiveData(I2C1, n_addr_receive, &data, 6);
 		I2C_SendData(I2C1, n_addr_receive, &n_done, 2);
+		
+		// ensure on startup that data doesn't accidentally trigger something
 		if (first_run) {
 			data[0] = 128; data[1] = 128; data[5] = 255;
 			first_run ^= first_run;
@@ -74,11 +71,8 @@ int volatile distance_S2 = 100;
 		distance_S1 = get_Distance_S1();
 		distance_S2 = get_Distance_S2();
 		if (distance_S2 == 0) distance_S2 = 15;
-		
 		close_enough = distance_S2 < 10 ? 1 : 0;
 		pump_enable = (z_button && close_enough) || c_button;
-		
-		
 		
 		// debug motor controls
 		if (direction == FORWARD)
@@ -107,5 +101,6 @@ int volatile distance_S2 = 100;
 		enable_pump(pump_enable);
 		
 	}	
+	
 }
 
