@@ -48,44 +48,8 @@ void GPIO_Air(void) {
 	GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED5_1 | GPIO_OSPEEDR_OSPEED6_1);
 }
 
-#define DELAY 1500
+#define DELAY 1700
 
-
-
-/*	stepper motor driver logic
-motor off:	input 1 = 0, input 2 = 0
-motor off:	input 1 = 1, input 2 = 1
-forward:	input 1 = 1, input 2 = 0
-backward:	input 1 = 0, input 2 = 1 */
-// static uint32_t pinR1_1 = GPIO_ODR_OD5, pinR1_2 = GPIO_ODR_OD6,
-// 				pinR2_1 = GPIO_ODR_OD8, pinR2_2 = GPIO_ODR_OD9;
-// static uint32_t pinL1_1 = GPIO_ODR_OD0, pinL1_2 = GPIO_ODR_OD1,
-// 				pinL2_1 = GPIO_ODR_OD2, pinL2_2 = GPIO_ODR_OD3;
-
-// void move_robot(enum DIR dir) {
-// 	switch (dir) {
-// 		case NONE:
-// 			GPIOC->ODR &= ~(pinR1_1 | pinR1_2 | pinR2_1 | pinR2_2 | 
-// 							pinL1_1 | pinL1_2 | pinL2_1 | pinL2_2);
-// 			break;
-// 		case FORWARD:
-// 			GPIOC->ODR |= pinR1_1 | pinR2_1 | pinL1_2 | pinL2_2;
-// 			GPIOC->ODR &= ~(pinR1_2 | pinR2_2 | pinL1_1 | pinL2_1);
-// 			break;
-// 		case BACKWARD:
-// 			GPIOC->ODR |= pinR1_2 | pinR2_2 | pinL1_1 | pinL2_1;
-// 			GPIOC->ODR &= ~(pinR1_1 | pinR2_1 | pinL1_2 | pinL2_2);
-// 			break;
-// 		case LEFT:
-// 			GPIOC->ODR |= pinR1_1 | pinR2_1 | pinL1_1 | pinL2_1;
-// 			GPIOC->ODR &= ~(pinR1_2 | pinR2_2 | pinL1_2 | pinL2_2);
-// 			break;
-// 		case RIGHT:
-// 			GPIOC->ODR |= pinR1_2 | pinR2_2 | pinL1_2 | pinL2_2;
-// 			GPIOC->ODR &= ~(pinR1_1 | pinR2_1 | pinL1_1 | pinL2_1);
-// 			break;
-// 	}
-// }
 
 void enable_pump(uint8_t enable) {
 	GPIOA->ODR &= ~GPIO_ODR_OD6;
@@ -95,7 +59,7 @@ void enable_pump(uint8_t enable) {
 }
 
 
-/* old stepper motor driver code */
+/* stepper motor driver code */
 static uint32_t pinA1_R = GPIO_ODR_OD5, pinA2_R = GPIO_ODR_OD6,
 				pinA1_L = GPIO_ODR_OD0, pinA2_L = GPIO_ODR_OD1;
 
@@ -103,9 +67,9 @@ static uint32_t pinB1_R = GPIO_ODR_OD8, pinB2_R = GPIO_ODR_OD9,
 				pinB1_L = GPIO_ODR_OD10, pinB2_L = GPIO_ODR_OD12;
 
 
-/* old stepper motor driver code */
+/* stepper motor driver code */
 void move_robot(enum DIR dir) {
-	for (int j = 0; j < 32; j++) {
+	for (int j = 0; j < 8; j++) {
 		switch (dir) {
 			case BACKWARD:
 				// step 1
@@ -153,9 +117,4 @@ void motor_initializer(void) {
 		for(int i=0; i < 10000; i++);
 		move_robot(FORWARD);
 		for(int i=0; i < 10000; i++);
-		move_robot(BACKWARD);
-		//for(int i=0; i < 10000; i++);
-		//move_robot(RIGHT);
-		//for(int i=0; i < 10000; i++);
-		//move_robot(LEFT);
 }
